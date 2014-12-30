@@ -10,6 +10,7 @@ public class PlayerData {
 	public int bus = 0;
 	public string name = "User";
 	public List<int> ownBuses;
+	public bool mute = false;
 }
 
 
@@ -41,8 +42,6 @@ public class PlayerSave {
 		} else {
 			data = new PlayerData();
 			data.name +=  Random.Range(0,100).ToString() + "-" + Random.Range(0,100).ToString() + "-" + Random.Range(0,100).ToString();
-			ServerScript s = new ServerScript();
-			s.register();
 		}
 	}
 }

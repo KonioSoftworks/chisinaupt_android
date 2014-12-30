@@ -5,7 +5,9 @@ using System.Threading;
 using UnityEngine.UI;
 
 public class Loader : MonoBehaviour {
-	
+
+	public List<AudioSource> audioSources;
+
 	public List<Transport> buses;
 		
 	public PlayerSave saveController;
@@ -19,14 +21,20 @@ public class Loader : MonoBehaviour {
 
 	public GameObject deadText;
 
+	//sound
+	public GameObject toggleSoundOn;
+	public GameObject toggleSoundOff;
+	public AudioListener audioListener;
+
 	public void loadAndExecute() {
-		saveController = new PlayerSave();
+		GoogleAD.hideAd();
 		if(!buses[saveController.data.bus])
 			saveController.data.bus = 0;
 		spawnBus();
 	}
 
 	private void spawnBus(){
+		Debug.Log("Spawned");
 		Vector3 position = new Vector3(5f,0f,10f);
 		GameObject bus1 = GameObject.FindGameObjectWithTag("Player");
 		if(bus1){			
@@ -40,20 +48,25 @@ public class Loader : MonoBehaviour {
 	}
 
 	public void Start(){
+		saveController = new PlayerSave();
 		Time.timeScale = 1;
-		if(Application.loadedLevel == 1)
+		if(Application.loadedLevel == 2)
 			loadAndExecute();
+		refreshSoundButton();
+		if(saveController.data.mute){
+			audioListener.enabled = false;
+			foreach(AudioSource source in audioSources){
+				if(source){
+					source.volume = 0;
+					source.Stop();
+					source.enabled = false;
+				}
+			}
+		}
 	}
 
-	void sendDataToServer(int scoreValue){
-		score = scoreValue;
-		Thread t = new Thread(threadSendData);
-		t.Start();
-	}
-
-	void threadSendData(){
-		ServerScript server = new ServerScript();
-		server.save(saveController.data.name,score);
+	public void exitScene(){
+		Application.LoadLevel("menu");
 	}
 
 	public void Died(int score){
@@ -61,21 +74,49 @@ public class Loader : MonoBehaviour {
 		saveController.Save();
 		pc.audio.Stop();
 		if(deadText){
-			deadText.GetComponent<Text>().text = "Whoops...\nYou earned "+score+" lei";
+			deadText.GetComponent<Text>().text = "Măăăi...\nYou earned "+score+" lei";
 		}
-		sendDataToServer(score);
 	}
 
 	public void resumeButton(){
 		pc.Resume();
 	}
 
-	public void exitButton(){
-		pc.Exit();
-	}
-
 	public void retryButton(){
 		pc.Save();
 		Application.LoadLevel("scene");
 	}
+		
+	public void toggleSound(){
+		saveController.data.mute = !saveController.data.mute;
+		audioListener.enabled = !saveController.data.mute;
+		foreach(AudioSource source in audioSources){
+			if(source){
+				if(saveController.data.mute){
+					source.volume = 0;
+					source.Stop();
+					source.enabled = false;
+				}else {
+					source.enabled = true;
+					source.volume = 1;
+					source.Play();
+				}
+			}
+		}
+		saveController.Save();
+		refreshSoundButton();
+	}
+
+	private void refreshSoundButton(){
+		if(toggleSoundOff && toggleSoundOn){
+			if(saveController.data.mute){
+				toggleSoundOn.SetActive(false);
+				toggleSoundOff.SetActive(true);
+			}else{
+				toggleSoundOn.SetActive(true);
+				toggleSoundOff.SetActive(false);
+			}
+		}
+	}
+	
 }

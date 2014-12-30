@@ -10,7 +10,6 @@ GameObject:
   - 4: {fileID: 400000}
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
-  - 95: {fileID: 9500000}
   - 54: {fileID: 5400000}
   - 114: {fileID: 11400000}
   - 65: {fileID: 6500000}
@@ -164,21 +163,6 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
---- !u!95 &9500000
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 24d0953b6299bae42aac3955ff0148b1, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -194,11 +178,13 @@ MonoBehaviour:
   - 3
   axleRatio: 3
   minRpm: 1000
-  maxRpm: 8000
+  maxRpm: 6000
   wheelRadius: .5
   hp: 300
   converterRatio: 3
   money: 0
+  isPaused: 0
+  gameOver: 0
   rotationAngle: 5
   brakeTorque: 4000
   coinValue: 3

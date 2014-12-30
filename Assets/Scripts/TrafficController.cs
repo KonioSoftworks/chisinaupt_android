@@ -3,10 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TrafficController : MonoBehaviour {
-
-
-	public int minCarNum = 10;
-	public int maxCarNum = 20;
+	
 	public float minRenderDistance = 100f;
 	public float minDestroyDistance = 150f;
 
@@ -15,9 +12,8 @@ public class TrafficController : MonoBehaviour {
 
 	private float[] positions = new float[]{-5.0f,-1.8f,1.8f,5.0f};
 
-	private float[] ellapsedTime = new float[]{0f,1f,0f,3f};	
+	private float[] ellapsedTime = new float[]{0f,1f,1f,3f};	
 	private float rareTime = 0f;
-
 
 	// Use this for initialization
 	void Start () {

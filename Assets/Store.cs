@@ -23,7 +23,9 @@ public class Store : MonoBehaviour {
 	void Awake () {
 		mainController.saveController = new PlayerSave();
 		updateCash();
+		currentCar = mainController.saveController.data.bus;
 		spawnCar(currentCar);
+		GoogleAD.showAd();
 	}
 	
 	// Update is called once per frame
@@ -45,12 +47,18 @@ public class Store : MonoBehaviour {
 			Destroy(car);
 		GameObject carGO = mainController.buses[id].car;
 		if(!carGO){
-			Debug.Log("Bus not found ;((((");
-			return;
+			Debug.Log("Bus not found ;((((");			
+			carGO = mainController.buses[0].car;
 		}
 		car = (GameObject)Instantiate(carGO,Vector3.zero,carGO.transform.rotation);
 		car.GetComponent<PlayerController>().enabled = false;
 		car.transform.parent = scene.transform;
+		car.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+		if(mainController.saveController.data.mute){
+			car.audio.volume = 0;
+			car.audio.Stop();
+			car.audio.enabled = false;
+		}
 
 		//updating data
 
@@ -79,17 +87,63 @@ public class Store : MonoBehaviour {
 		return a;
 	}
 
+	private int getMin(int pivot){
+		bool found = false;
+		int pos = 0;
+		for(int i=0;i < mainController.buses.Count;i++){
+			if(mainController.buses[i].price > mainController.buses[pivot].price){
+				if(!found)
+					pos = i;
+				else
+					if(mainController.buses[i].price < mainController.buses[pos].price)
+						pos = i;
+				found = true;
+			}
+		}
+		if(found)
+			return pos;
+		else {
+			pos = 0;			
+			for(int i=0;i < mainController.buses.Count;i++){
+				if(mainController.buses[i].price < mainController.buses[pos].price)
+					pos = i;
+			}
+			return pos;
+		}
+	}
+
+	private int getMax(int pivot){
+		bool found = false;
+		int pos = 0;
+		for(int i=0;i < mainController.buses.Count;i++){
+			if(mainController.buses[i].price < mainController.buses[pivot].price){
+				if(!found)
+					pos = i;
+				else
+					if(mainController.buses[i].price > mainController.buses[pos].price)
+						pos = i;
+				found = true;
+			}
+		}
+		if(found)
+			return pos;
+		else {
+			pos = 0;			
+			for(int i=0;i < mainController.buses.Count;i++){
+				if(mainController.buses[i].price > mainController.buses[pos].price)
+					pos = i;
+			}
+			return pos;
+		}
+	}
+
 	public void nextCar(){
-		currentCar++;
-		if(currentCar >= mainController.buses.Count)
-			currentCar = 0;
+		currentCar = getMin (currentCar);
 		spawnCar(currentCar);
 	}
 
 	public void previousCar(){
-		currentCar--;
-		if(currentCar < 0)
-			currentCar = mainController.buses.Count-1;
+		currentCar = getMax (currentCar);
 		spawnCar(currentCar);		
 	}
 

@@ -12,4 +12,5 @@ public class RandomAppearence : MonoBehaviour {
 			gameObject.SetActive(false);
 		}
 	}
+	
 }

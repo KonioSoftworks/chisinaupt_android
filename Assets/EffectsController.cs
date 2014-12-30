@@ -1,22 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class EffectsController : MonoBehaviour {
 
-	public GameObject speed;
-	public GameObject coins;
-	public AudioClip coinAudio;
+	public Text data;
+	public AudioSource coinsAs;
 
 	private GameObject player;
 	private PlayerController pcontroller;
-	private AudioSource coinsAs;
 	private int money;
 
 	// Use this for initialization
 	void Awake() {
 		findPlayerIfNotExist();
-		coinsAs = gameObject.AddComponent<AudioSource>();
-		coinsAs.clip = coinAudio;
 		money = 0;
 	}
 	
@@ -26,8 +23,7 @@ public class EffectsController : MonoBehaviour {
 		if (pcontroller) {
 			if(money != pcontroller.money)
 				coinEffect();
-			coins.guiText.text = pcontroller.money.ToString() + " lei";	
-			speed.guiText.text = (Mathf.RoundToInt(pcontroller.getVelocity() * 2.6f)).ToString() + "km/h";
+			data.text = pcontroller.money.ToString() + " lei\n" +  (player.transform.position.z/1000f).ToString("F2") +" km\n" + Mathf.RoundToInt(pcontroller.getVelocity() * 2.6f)	.ToString() + "km/h";
 		}
 	}
 
@@ -41,7 +37,8 @@ public class EffectsController : MonoBehaviour {
 	}
 
 	public void coinEffect(){
-		coinsAs.Play();
+		if(coinsAs.enabled)
+			coinsAs.Play();
 		money = pcontroller.money;
 	}
 

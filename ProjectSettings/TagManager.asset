@@ -7,12 +7,13 @@ TagManager:
   - Road
   - Sun
   - Coins
-  - Fuel
+  - ImageLS
   - Car
   - Canvas1
   - Canvas2
   - MainController
   - Effects
+  - Sound
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

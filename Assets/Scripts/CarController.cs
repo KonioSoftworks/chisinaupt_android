@@ -23,7 +23,7 @@ public class CarController : MonoBehaviour {
 		setVelocity(Mathf.Lerp(10f,25f,Mathf.Abs(velocity) + speedToChange*Time.deltaTime));
 	}
 
-	void setVelocity(float value) {
+	public void setVelocity(float value) {
 		velocity = value;
 		if(transform.position.x < 0)
 			velocity *= -1;

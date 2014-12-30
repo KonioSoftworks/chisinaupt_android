@@ -24,7 +24,6 @@ public class TouchController : MonoBehaviour {
 
 	public void onClick(int dir){
 		playerController.makeTouch(dir);
-		Debug.Log(dir);
 	}
 
 	public void brakeIn(){

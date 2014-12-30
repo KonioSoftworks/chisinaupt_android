@@ -7,10 +7,6 @@ public class RoadGeneratorScript : MonoBehaviour {
 	public List<GameObject> AvailablePlanes;
 
 	private GameObject Road;
-	public GameObject Coin;
-	public GameObject Coin2;
-
-	public int renderedPlanes = 15;
 
 	public float distanceFromCar = 10f;
 	private float distance = 0f;
@@ -28,29 +24,34 @@ public class RoadGeneratorScript : MonoBehaviour {
 
 	private int maxCoinsInRow = 7;
 	private int minCoinsInRow = 1;
-	
+
+	//tiles
+	public const int renderedPlanes = 15;
+	private GameObject[] tiles;
+	private GameObject player;
+	private Loader loader;
+
 	float[] bandsPositions = new float[]{-5f,-1.8f,1.8f,5f}; // coins positions
 
 
 	void Start () {
-		Vector3 carV = GameObject.FindGameObjectWithTag("Player").transform.position;
+		player = GameObject.FindGameObjectWithTag("Player");
+		Vector3 carV = player.transform.position;
 		Road = GameObject.FindGameObjectWithTag("Road");		
 		buildings = new List<GameObject>();
-		// loading coin
-
-		if(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().coinValue == 2)
-			Coin = Coin2;
 
 		//loading transport properties
-
 		GameObject MC = GameObject.FindGameObjectWithTag ("MainController");
 		if (MC) {
-			Loader l = MC.GetComponent<Loader>();
-			maxCoinsInRow = l.transport.coinFreq;
+			loader = MC.GetComponent<Loader>();
+			maxCoinsInRow = loader.transport.coinFreq;
 		}
 
+
+
+		tiles = new GameObject[renderedPlanes];
 		for(int i=0;i < renderedPlanes;i++){
-			createNewPlane();
+			createNewPlane(i);
 		}
 		while(distanceCoins - carV.z < 100){	
 			CoinsInRow = Random.Range(minCoinsInRow,maxCoinsInRow);
@@ -61,14 +62,12 @@ public class RoadGeneratorScript : MonoBehaviour {
 	}
 
 	void Update () {
-		var Planes = GameObject.FindGameObjectsWithTag("Road tiles");
 		var Coins = GameObject.FindGameObjectsWithTag("Coins");
-		Vector3 carV = GameObject.FindGameObjectWithTag("Player").transform.position;
+		Vector3 carV = player.transform.position;
 		transform.position = new Vector3(transform.position.x,transform.position.y,carV.z - distanceFromCar);
 		for(int i=0;i < renderedPlanes;i++){
-			if(Planes[i].transform.position.z < carV.z - 1.5f*distanceToNextPlane){
-				Destroy(Planes[i]);
-				createNewPlane();
+			if(tiles[i].transform.position.z < carV.z - 1.5f*distanceToNextPlane){
+				createNewPlane(i);
 			}
 		}
 		CoinsInRow = Random.Range(minCoinsInRow,maxCoinsInRow);
@@ -82,25 +81,31 @@ public class RoadGeneratorScript : MonoBehaviour {
 		renderBuildings();
 	}
 
-	void createNewPlane(){
-		GameObject plane = AvailablePlanes[Random.Range(0,AvailablePlanes.Count)];
-		Vector3 newPosition = new Vector3(plane.transform.position.x,plane.transform.position.y,
-		                                  distance);
-		Quaternion rotation = new Quaternion(0,0,0,0); 
-		distance += distanceToNextPlane;
-		GameObject newPlane = (GameObject)Instantiate(plane,newPosition,rotation);
-		newPlane.transform.parent = Road.transform;
+	void createNewPlane(int nr){
+		if(tiles[nr]){			
+			GameObject plane = AvailablePlanes[Random.Range(0,AvailablePlanes.Count)];
+			Destroy(tiles[nr]);
+			tiles[nr] = Instantiate(plane,new Vector3(tiles[nr].transform.position.x,tiles[nr].transform.position.y,distance),plane.transform.rotation) as GameObject;
+			distance += distanceToNextPlane;
+		} else {
+			GameObject plane = AvailablePlanes[Random.Range(0,AvailablePlanes.Count)];
+			Vector3 newPosition = new Vector3(plane.transform.position.x,plane.transform.position.y,
+			                                  distance);
+			Quaternion rotation = new Quaternion(0,0,0,0); 
+			distance += distanceToNextPlane;
+			tiles[nr] = (GameObject)Instantiate(plane,newPosition,rotation);
+			tiles[nr].transform.parent = Road.transform;
+		}
 	}
 
 	void generateNewCoin(int band,ref float rowDistance){
-		Vector3 position = new Vector3(bandsPositions[band], Coin.transform.position.y,rowDistance);		
-		GameObject newCoin = (GameObject)Instantiate(Coin,position,Coin.transform.rotation);
+		Vector3 position = new Vector3(bandsPositions[band], loader.transport.coinPrefab.transform.position.y,rowDistance);		
+		GameObject newCoin = (GameObject)Instantiate(loader.transport.coinPrefab,position,loader.transport.coinPrefab.transform.rotation);
 		newCoin.transform.Rotate(new Vector3(15,30,45) * Time.deltaTime*10);
 		rowDistance += Random.Range(3,5);
 	}
 
 	void CoinRow(int n,int band){
-
 		float position = distanceCoins;
 		for(int i = 0; i<n; i++){
 			generateNewCoin(band,ref position);
@@ -109,9 +114,8 @@ public class RoadGeneratorScript : MonoBehaviour {
 	}
 
 	void renderBuildings() {
-		const float hz = 10f;
 		for(int i=0;i < buildings.Count;i++) {
-			if(buildings[i].transform.position.z + hz < transform.position.z){
+			if(buildings[i].transform.position.z + 10f < transform.position.z){
 				Destroy(buildings[i]);
 				buildings.RemoveAt(i);
 			}
@@ -121,11 +125,10 @@ public class RoadGeneratorScript : MonoBehaviour {
 	}
 	
 	void renderSide(ref float sideDistance,int pos){
-		const float n = 20f;
 		while(sideDistance <= distance){
 			GameObject obj = availableBuildings[Random.Range(0,availableBuildings.Count)];
 			BuildingController objController = (BuildingController) obj.GetComponent(typeof(BuildingController));
-			Vector3 position = new Vector3(n*pos+pos*objController.distanceFromRoad,objController.heightFromRoad,sideDistance);			
+			Vector3 position = new Vector3(20f*pos+pos*objController.distanceFromRoad,objController.heightFromRoad,sideDistance);			
 			buildings.Add((GameObject)Instantiate(obj,position,obj.transform.rotation));
 			sideDistance += objController.distanceFromOthers;
 		}

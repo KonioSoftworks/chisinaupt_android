@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -39,8 +40,8 @@ public class PlayerController : MonoBehaviour {
 	private int previousBand = 0;
 
 	private bool pressed = false;
-	private bool isPaused = false;
-	private bool gameOver = false;
+	public bool isPaused = false;
+	public bool gameOver = false;
 
 	private float[] positions = new float[]{-5f,-1.8f,1.8f,5f};
 
@@ -52,16 +53,9 @@ public class PlayerController : MonoBehaviour {
 	public float brakeTorque = 4000f;
 	public int coinValue = 3;
 
-	private float swipe = 0f;
 	private bool touchBrake = false;
 	private bool touchAccessMenu = false;
-
-	// GUI
-
-	CanvasGroup canvas;
-	CanvasGroup canvas2;
-	List<CanvasGroup> canvasGroups;
-
+	
 	//main controller
 	GameObject mainController;
 	Loader loader;
@@ -75,17 +69,11 @@ public class PlayerController : MonoBehaviour {
 		rpm = minRpm;
 		gear = 0;
 		money = 0;
-		canvas = new CanvasGroup();
-		canvas = GameObject.FindObjectOfType<CanvasGroup>();
-		canvas.alpha = 0f;
-		canvas2 = new CanvasGroup();
-		canvas2 = GameObject.FindObjectOfType<CanvasGroup>();
-		canvas2.alpha = 0f;
-		canvasGroups = new List<CanvasGroup>();
-		canvasGroups = GameObject.FindObjectsOfType<CanvasGroup>().ToList();
-		canvasGroups[0].alpha = 0f;
-		canvasGroups[1].alpha = 0f;
 		initRot = transform.rotation;
+		if(loader.saveController.data.mute){
+			audio.volume = 0;
+			audio.enabled = false;
+		}
 	}
 
 	public void makeTouch(int direction){
@@ -111,20 +99,17 @@ public class PlayerController : MonoBehaviour {
 	public void Resume(){
 		isPaused = false;
 		Time.timeScale = 1;
-		canvasGroups[1].alpha = 0f;
 	}
 
 	public void Exit(){
 		Application.LoadLevel("menu");
 		Save();
 	}
-	
+	/*
 	void OnGUI(){
-		if(isPaused){
+		if(isPaused){			
+			pausePanel.SetActive(true);
 			isPaused = false;
-			Time.timeScale = 0;
-			//canvas.alpha = 1f;
-			canvasGroups[1].alpha = 1f;
 		}
 		// Game Over
 		if(gameOver){
@@ -136,27 +121,26 @@ public class PlayerController : MonoBehaviour {
 		}
 
 	}
-
+	*/
 	void Update() {
+
 		if(Input.GetKeyDown(KeyCode.Escape) || touchAccessMenu){
-			if(Time.timeScale != 0 ){
-				isPaused = true;
-				Time.timeScale = 0;
-				//canvas.alpha = 0f;
-				canvasGroups[1].alpha = 1f;
-				//Save ();
-			}else{ 
-				Time.timeScale = 1;
+			if(isPaused)
 				isPaused = false;
-				//canvas.alpha = 0f;
-				canvasGroups[1].alpha = 0f;
-			}
+			else
+				isPaused = true;
 			if(touchAccessMenu)
 				touchAccessMenu = false;
 		}
+		
+		if(isPaused || gameOver)
+			return;
 
 		if (isMoving && !isPaused)
 			smoothMove();
+		else
+			if(transform.position.x != positions[band])
+				transform.position = new Vector3(positions[band],transform.position.y,transform.position.z);
 
 		float gas = 1;
 		float brake = -1 * Mathf.Clamp(Input.GetAxis("Vertical"), -1, 0);
@@ -174,14 +158,18 @@ public class PlayerController : MonoBehaviour {
 		if(rpm == maxRpm && gear < GearRatios.Count-1){
 			gear++;
 			rpm = getRpmByVelocity() + 0.01f;
-			audio.Stop();
-			audio.PlayDelayed(0.1f);
+			if(audio.enabled){
+				audio.Stop();
+				audio.PlayDelayed(0.1f);
+			}
 		}
 		if(rpm == minRpm && gear > 0){
 			gear--;
 			rpm = getRpmByVelocity() - 0.01f;
-			audio.Stop();
-			audio.PlayDelayed(0.1f);
+			if(audio.enabled){
+				audio.Stop();
+				audio.PlayDelayed(0.1f);
+			}
 		}
 		if(Input.GetKeyDown("left")){
 			move (-1);
@@ -221,10 +209,10 @@ public class PlayerController : MonoBehaviour {
 			coefficient = (getVelocity()/40f);
 
 		float units = 0.13f * coefficient * 60 * Time.deltaTime;
+		/*
 		float angle = 20f * coefficient;
 		float angle2 = rotationAngle * coefficient;
 		float k = (band > previousBand) ? 1 : -1;
-
 		if (band == previousBand){
 			transform.rotation = initRot;
 		} else {
@@ -246,6 +234,7 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 		}
+		*/
 		x += ((x < positions[band]) ? 1f  : -1f) * units;
 		Vector3 newPos = new Vector3 (x, transform.position.y, transform.position.z);
 		transform.position = newPos;
@@ -263,7 +252,10 @@ public class PlayerController : MonoBehaviour {
 			other.gameObject.SetActive(false);
 		}
 		if(other.gameObject.tag == "Car"){
-			gameOver = true;
+			if(other.transform.position.z < this.transform.position.z && other.transform.position.x == this.transform.position.x)
+				Destroy(other.gameObject);
+			else
+				gameOver = true;
 		}
 	}
 

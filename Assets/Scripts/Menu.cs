@@ -3,12 +3,8 @@ using System.Collections;
 
 public class Menu : MonoBehaviour {
 
-	public void ChangeScene(){
-		Application.LoadLevel("scene");
-	}
-
-	public void GoStore(){
-		Application.LoadLevel("shop");
+	public void Start(){
+		GoogleAD.showAd(true);
 	}
 
 	public void goFacebook(){
@@ -18,5 +14,4 @@ public class Menu : MonoBehaviour {
 	public void Exit(){
 		Application.Quit();
 	}
-
 }
