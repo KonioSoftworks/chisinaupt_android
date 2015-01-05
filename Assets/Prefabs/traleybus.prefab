@@ -186,7 +186,7 @@ MonoBehaviour:
   isPaused: 0
   gameOver: 0
   rotationAngle: 5
-  brakeTorque: 4000
+  brakeTorque: 3500
   coinValue: 3
 --- !u!1001 &100100000
 Prefab:

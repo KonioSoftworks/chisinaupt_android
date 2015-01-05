@@ -7,6 +7,7 @@ public class TouchController : MonoBehaviour {
 	PlayerController playerController;
 
 	private bool brake = false;
+	private bool gas = false;
 
 	public void Start(){
 		player = GameObject.FindGameObjectWithTag("Player");
@@ -20,18 +21,19 @@ public class TouchController : MonoBehaviour {
 	public void Update(){
 		if(brake)
 			playerController.brakeTouch();
+		playerController.touchGas = gas;
 	}
 
 	public void onClick(int dir){
 		playerController.makeTouch(dir);
 	}
-
-	public void brakeIn(){
-		brake = true;
+	
+	public void setBrake(bool b){
+		brake = b;
 	}
 
-	public void brakeOut(){
-		brake = false;
+	public void setGas(bool s){
+		gas = s;
 	}
 
 	public void accessMenu(){

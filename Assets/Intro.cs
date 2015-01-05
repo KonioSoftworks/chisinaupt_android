@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Intro : MonoBehaviour {
 
 	public List<GameObject> intr;
+	public LoadingScreen sceneChanger;
 
 	private float ellapsedTime = 0f;
 	private float timePerImage = 2f;
@@ -22,7 +23,7 @@ public class Intro : MonoBehaviour {
 			activateIntr(++index);
 		}
 		if(index >= intr.Count)
-			Application.LoadLevel("menu");
+			sceneChanger.loadScene("menu");
 	}
 
 	private void activateIntr(int x){

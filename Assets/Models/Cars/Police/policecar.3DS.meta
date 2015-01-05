@@ -1,0 +1,124 @@
+fileFormatVersion: 2
+guid: 7e80f5d1049acbd4ba810fa5e89c4ec9
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: _001_NYPD_
+    100002: _002_NYPD_
+    100004: _003_NYPD_
+    100006: _005_NYPD_
+    100008: _006_NYPD_
+    100010: _007_NYPD_
+    100012: Armature
+    100014: car
+    100016: door_back0
+    100018: door_back_
+    100020: door_fron0
+    100022: door_front
+    100024: hood
+    100026: pedal_acce
+    100028: pedal_brak
+    100030: //RootNode
+    100032: root_car
+    100034: root_groun
+    100036: steering_w
+    100038: trunk
+    100040: wheel_fron
+    100042: wheel_rea0
+    100044: wheel_rear
+    400000: _001_NYPD_
+    400002: _002_NYPD_
+    400004: _003_NYPD_
+    400006: _005_NYPD_
+    400008: _006_NYPD_
+    400010: _007_NYPD_
+    400012: Armature
+    400014: car
+    400016: door_back0
+    400018: door_back_
+    400020: door_fron0
+    400022: door_front
+    400024: hood
+    400026: pedal_acce
+    400028: pedal_brak
+    400030: //RootNode
+    400032: root_car
+    400034: root_groun
+    400036: steering_w
+    400038: trunk
+    400040: wheel_fron
+    400042: wheel_rea0
+    400044: wheel_rear
+    2300000: _001_NYPD_
+    2300002: _002_NYPD_
+    2300004: _003_NYPD_
+    2300006: _005_NYPD_
+    2300008: _006_NYPD_
+    2300010: _007_NYPD_
+    3300000: _001_NYPD_
+    3300002: _002_NYPD_
+    3300004: _003_NYPD_
+    3300006: _005_NYPD_
+    3300008: _006_NYPD_
+    3300010: _007_NYPD_
+    4300000: _001_NYPD_
+    4300002: _002_NYPD_
+    4300004: _003_NYPD_
+    4300006: _005_NYPD_
+    4300008: _006_NYPD_
+    4300010: _007_NYPD_
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

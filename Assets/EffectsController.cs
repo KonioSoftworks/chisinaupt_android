@@ -6,10 +6,13 @@ public class EffectsController : MonoBehaviour {
 
 	public Text data;
 	public AudioSource coinsAs;
+	public Police police;
+	public AudioSource policeAs;
 
 	private GameObject player;
 	private PlayerController pcontroller;
 	private int money;
+
 
 	// Use this for initialization
 	void Awake() {
@@ -20,6 +23,15 @@ public class EffectsController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		findPlayerIfNotExist();
+		if(police.activeRadar && !policeAs.isPlaying){
+			policeAs.Play();
+		}
+		if(police.activeRadar){
+			policeAs.pitch = 1f + (1.5f - 0.01f*Mathf.Abs(policeAs.gameObject.transform.position.y - transform.position.y));
+		}
+		if(!police.activeRadar && policeAs.isPlaying){
+			policeAs.Stop();
+		}
 		if (pcontroller) {
 			if(money != pcontroller.money)
 				coinEffect();

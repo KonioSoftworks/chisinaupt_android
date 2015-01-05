@@ -5,24 +5,12 @@ public class CarController : MonoBehaviour {
 
 	public float velocity = 30f;
 
-	private float timeToChange = 0f;
-	private float speedToChange = 0f;
-
 	// Use this for initialization
 	void Start () {
-		velocity = Random.Range(10f,25f);
+		velocity = Random.Range(13f,30f);
 		setVelocity(velocity);
 	}
-
-	void Update() {
-		if(timeToChange > 5f){
-			timeToChange = 0;
-			speedToChange = Random.Range(-4f,4f);
-		}
-		timeToChange += Time.deltaTime;
-		setVelocity(Mathf.Lerp(10f,25f,Mathf.Abs(velocity) + speedToChange*Time.deltaTime));
-	}
-
+	
 	public void setVelocity(float value) {
 		velocity = value;
 		if(transform.position.x < 0)

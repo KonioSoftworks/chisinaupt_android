@@ -13,3 +13,5 @@ EditorBuildSettings:
     path: Assets/scene.unity
   - enabled: 1
     path: Assets/shop.unity
+  - enabled: 1
+    path: Assets/scoreboard.unity

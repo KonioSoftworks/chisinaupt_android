@@ -9,4 +9,5 @@ public class Transport : MonoBehaviour{
 	public int coinFreq;
 	public List<string> info;
 	public GameObject coinPrefab;
+	public string name;
 }

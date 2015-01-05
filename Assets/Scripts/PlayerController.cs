@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour {
 
 	private bool touchBrake = false;
 	private bool touchAccessMenu = false;
+	public bool touchGas = false;
 	
 	//main controller
 	GameObject mainController;
@@ -70,10 +71,6 @@ public class PlayerController : MonoBehaviour {
 		gear = 0;
 		money = 0;
 		initRot = transform.rotation;
-		if(loader.saveController.data.mute){
-			audio.volume = 0;
-			audio.enabled = false;
-		}
 	}
 
 	public void makeTouch(int direction){
@@ -132,7 +129,7 @@ public class PlayerController : MonoBehaviour {
 			if(touchAccessMenu)
 				touchAccessMenu = false;
 		}
-		
+
 		if(isPaused || gameOver)
 			return;
 
@@ -142,15 +139,20 @@ public class PlayerController : MonoBehaviour {
 			if(transform.position.x != positions[band])
 				transform.position = new Vector3(positions[band],transform.position.y,transform.position.z);
 
-		float gas = 1;
-		float brake = -1 * Mathf.Clamp(Input.GetAxis("Vertical"), -1, 0);
+		float gas = (touchGas || Input.GetKey("up")) ? 1 : 0;
+		float brake = -1 * Mathf.Clamp(Input.GetAxis("Vertical"), -1, 0);	
 
-		if(brake != 0 || touchBrake){
+		if(touchBrake)
+			brake = 1;
+
+		if(brake != 0){
 			rpm -= Time.deltaTime * brakeTorque;
 			rpm = Mathf.Max (minRpm,rpm);
 			touchBrake = false;
 		}
-
+		if(gas == 0 && brake == 0){
+			rpm = Mathf.Max(getRpmByVelocity() - (150f*Time.deltaTime),minRpm);
+		}
 		if(gas == 1 && brake == 0){
 			rpm += Time.deltaTime * (10*hp - gear*20) * gas;
 			rpm = Mathf.Min (maxRpm,rpm);
@@ -251,7 +253,7 @@ public class PlayerController : MonoBehaviour {
 			money += coinValue;
 			other.gameObject.SetActive(false);
 		}
-		if(other.gameObject.tag == "Car"){
+		if(other.gameObject.tag == "Car" || other.gameObject.tag == "Police"){
 			if(other.transform.position.z < this.transform.position.z && other.transform.position.x == this.transform.position.x)
 				Destroy(other.gameObject);
 			else

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine.UI;
 
+
 public class Loader : MonoBehaviour {
 
 	public List<AudioSource> audioSources;
@@ -24,7 +25,10 @@ public class Loader : MonoBehaviour {
 	//sound
 	public GameObject toggleSoundOn;
 	public GameObject toggleSoundOff;
-	public AudioListener audioListener;
+
+	//analytics
+	public GoogleAnalyticsV3 googleAnalytics;
+	public FacebookAPI FBApi;
 
 	public void loadAndExecute() {
 		GoogleAD.hideAd();
@@ -34,7 +38,6 @@ public class Loader : MonoBehaviour {
 	}
 
 	private void spawnBus(){
-		Debug.Log("Spawned");
 		Vector3 position = new Vector3(5f,0f,10f);
 		GameObject bus1 = GameObject.FindGameObjectWithTag("Player");
 		if(bus1){			
@@ -43,18 +46,25 @@ public class Loader : MonoBehaviour {
 		transport = buses [saveController.data.bus];
 		GameObject selBus = transport.car;
 		bus = (GameObject)Instantiate(selBus,position,selBus.transform.rotation);
+		if(saveController.data.mute){
+			bus.audio.enabled = false;
+		}
 		pc = bus.GetComponent<PlayerController>();
 		pc.coinValue = transport.coinValue;
 	}
 
 	public void Start(){
 		saveController = new PlayerSave();
+		if(FB.IsLoggedIn && !saveController.data.highscoreSent){
+			FBApi.createScore(saveController.data.localHighscore);
+			saveController.data.highscoreSent = true;
+			saveController.Save();
+		}
 		Time.timeScale = 1;
 		if(Application.loadedLevel == 2)
 			loadAndExecute();
 		refreshSoundButton();
 		if(saveController.data.mute){
-			audioListener.enabled = false;
 			foreach(AudioSource source in audioSources){
 				if(source){
 					source.volume = 0;
@@ -63,6 +73,9 @@ public class Loader : MonoBehaviour {
 				}
 			}
 		}
+		if(googleAnalytics){
+			googleAnalytics.LogScreen(Application.loadedLevelName);
+		}
 	}
 
 	public void exitScene(){
@@ -70,7 +83,27 @@ public class Loader : MonoBehaviour {
 	}
 
 	public void Died(int score){
+		if(googleAnalytics){
+			googleAnalytics.LogEvent(new EventHitBuilder()
+			                         .SetEventCategory("Cursa")
+			                         .SetEventAction("Sfirsit cursa")
+			                         .SetEventLabel("Cistig")
+			                         .SetEventValue(score));
+			googleAnalytics.LogEvent(new EventHitBuilder()
+			                         .SetEventCategory("Cursa")
+			                         .SetEventAction("Sfirsit cursa")
+			                         .SetEventLabel("Distanta")
+			                         .SetEventValue(Mathf.RoundToInt(bus.transform.position.y)));
+		}
 		saveController.data.money += score;
+		saveController.data.localHighscore = Mathf.Max(saveController.data.localHighscore,score);
+		if(score == saveController.data.localHighscore){
+			//send to facebook
+			if(FB.IsLoggedIn)
+				FBApi.createScore(score);
+			else
+				saveController.data.highscoreSent = false;
+		}
 		saveController.Save();
 		pc.audio.Stop();
 		if(deadText){
@@ -89,7 +122,6 @@ public class Loader : MonoBehaviour {
 		
 	public void toggleSound(){
 		saveController.data.mute = !saveController.data.mute;
-		audioListener.enabled = !saveController.data.mute;
 		foreach(AudioSource source in audioSources){
 			if(source){
 				if(saveController.data.mute){
@@ -108,6 +140,7 @@ public class Loader : MonoBehaviour {
 	}
 
 	private void refreshSoundButton(){
+		MusicPlayer.isMute = saveController.data.mute;
 		if(toggleSoundOff && toggleSoundOn){
 			if(saveController.data.mute){
 				toggleSoundOn.SetActive(false);

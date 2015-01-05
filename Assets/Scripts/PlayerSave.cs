@@ -11,6 +11,8 @@ public class PlayerData {
 	public string name = "User";
 	public List<int> ownBuses;
 	public bool mute = false;
+	public int localHighscore = 0;
+	public bool highscoreSent = true;
 }
 
 

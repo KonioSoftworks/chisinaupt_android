@@ -213,8 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328c7444047b606458408e1a53635ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSources:
-  - {fileID: 0}
+  audioSources: []
   buses:
   - {fileID: 11400002}
   - {fileID: 11400004}
@@ -226,7 +225,7 @@ MonoBehaviour:
   deadText: {fileID: 0}
   toggleSoundOn: {fileID: 0}
   toggleSoundOff: {fileID: 0}
-  audioListener: {fileID: 0}
+  googleAnalytics: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,6 +245,7 @@ MonoBehaviour:
   - 3 lei per each passenger
   - 127 km/h
   coinPrefab: {fileID: 100002, guid: 5817b611c8883f74aa8d5875eb1d63a1, type: 2}
+  name: Minibus
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -266,6 +266,7 @@ MonoBehaviour:
   - 90 km/h
   - 2 lei per passenger
   coinPrefab: {fileID: 100006, guid: 45adce6eebe63b44c98249b95144a20b, type: 2}
+  name: Old Trolleybus
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -285,6 +286,7 @@ MonoBehaviour:
   - 3 lei per passenger
   - 135 km/h
   coinPrefab: {fileID: 100002, guid: 5817b611c8883f74aa8d5875eb1d63a1, type: 2}
+  name: Bus122
 --- !u!114 &11414852
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -302,8 +304,9 @@ MonoBehaviour:
   coinFreq: 2
   info:
   - 20 lei per passenger
-  - 164 km/h
+  - 162 km/h
   coinPrefab: {fileID: 112704, guid: 352f5a5db739f5949b2ae17bfe72e144, type: 2}
+  name: Taxi
 --- !u!114 &11445570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -321,8 +324,9 @@ MonoBehaviour:
   coinFreq: 5
   info:
   - 3 lei per passenger
-  - x km/h
+  - 111 km/h
   coinPrefab: {fileID: 100002, guid: 5817b611c8883f74aa8d5875eb1d63a1, type: 2}
+  name: Old Bus
 --- !u!114 &11455590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -343,6 +347,7 @@ MonoBehaviour:
   - 96 km/h
   - Vintange bus
   coinPrefab: {fileID: 100002, guid: 5817b611c8883f74aa8d5875eb1d63a1, type: 2}
+  name: Vintage Bus
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

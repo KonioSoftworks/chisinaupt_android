@@ -9,6 +9,8 @@ public static class GoogleAD {
 	private static BannerView bannerView;
 	private static AdRequest request;
 
+	private static bool isOpen = false;
+
 	public static void showAd(){
 		showAd(true);
 	}
@@ -18,15 +20,20 @@ public static class GoogleAD {
 			bannerView = new BannerView(adUnitId, AdSize.Banner, ((top) ? AdPosition.Top : AdPosition.Bottom));
 			request = new AdRequest.Builder().Build();
 			bannerView.LoadAd(request);
-		} else {
-			bannerView.Show ();
+			isOpen = true;
+		}
+		if(!isOpen){			
+			bannerView.Show();
+			isOpen = true;
 		}
 	}
 
 	public static void hideAd(){
-		if(bannerView != null)
-			bannerView.Hide();
+		if(isOpen){
+			if(bannerView != null)
+				bannerView.Hide();
+			isOpen = false;
+		}
 	}
-
 
 }

@@ -12,7 +12,7 @@ public class TrafficController : MonoBehaviour {
 
 	private float[] positions = new float[]{-5.0f,-1.8f,1.8f,5.0f};
 
-	private float[] ellapsedTime = new float[]{0f,1f,1f,3f};	
+	private float[] ellapsedTime = new float[]{0f,1f,1f,1f};	
 	private float rareTime = 0f;
 
 	// Use this for initialization
@@ -24,8 +24,6 @@ public class TrafficController : MonoBehaviour {
 
 	void Update () {
 		rareTime += Time.deltaTime;
-		for(int i=0; i< 4;i++)
-			ellapsedTime[i] += Time.deltaTime;
 		GameObject player = GameObject.FindGameObjectWithTag("Player");
 		var cars = GameObject.FindGameObjectsWithTag("Car");
 		for(int i=0; i < cars.Length; i++){
@@ -35,16 +33,15 @@ public class TrafficController : MonoBehaviour {
 			}
 		}
 		for(int i=0;i < 4;i++){
-			if(Random.Range(0,3) == 0)
-				continue;
-			float randTime = Random.Range(1.5f,6f);
+			ellapsedTime[i] += Time.deltaTime;
+			float rnd = Random.Range(2f,7f);
 			if(i > 1)
-				randTime += Random.Range(4.5f,9f);
-			if(ellapsedTime[i] < randTime)
-				continue;
-			else
+				rnd = Random.Range(3.8f,8f);
+			if(ellapsedTime[i] >= rnd){
+				float distance = player.transform.position.z + minRenderDistance;
+				generateCar(i,distance);
 				ellapsedTime[i] = 0f;
-			generateCar(i,player.transform.position.z + minRenderDistance);
+			}
 		}
 		if(rareTime > 5){
 			if(rareCars.Count > 0 && Random.Range(1,8) == 1)

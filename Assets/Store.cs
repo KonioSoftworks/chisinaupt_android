@@ -19,6 +19,9 @@ public class Store : MonoBehaviour {
 
 	private int currentCar = 0;
 
+	//analytics
+	public GoogleAnalyticsV3 googleAnalytics;
+
 	// Use this for initialization
 	void Awake () {
 		mainController.saveController = new PlayerSave();
@@ -26,11 +29,6 @@ public class Store : MonoBehaviour {
 		currentCar = mainController.saveController.data.bus;
 		spawnCar(currentCar);
 		GoogleAD.showAd();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	public void goBack(){
@@ -150,6 +148,13 @@ public class Store : MonoBehaviour {
 	public void buy(){
 		if(!haveBus(currentCar)){
 			if(mainController.saveController.data.money >= mainController.buses[currentCar].price){
+				if(googleAnalytics){
+					googleAnalytics.LogEvent(new EventHitBuilder()
+					                         .SetEventCategory("Magazin")
+					                         .SetEventAction("Procurare autobus")
+					                         .SetEventLabel("Model")
+					                         .SetEventValue(currentCar));
+				}
 				mainController.saveController.data.ownBuses.Add(currentCar);
 				mainController.saveController.data.money -= mainController.buses[currentCar].price;
 				updateCash();
@@ -161,6 +166,13 @@ public class Store : MonoBehaviour {
 
 	public void select(){
 		if(haveBus(currentCar)){
+			if(googleAnalytics){
+				googleAnalytics.LogEvent(new EventHitBuilder()
+				                         .SetEventCategory("Magazin")
+				                         .SetEventAction("Alegere autobus")
+				                         .SetEventLabel("Model")
+				                         .SetEventValue(currentCar));
+			}
 			mainController.saveController.data.bus = currentCar;
 			mainController.saveController.Save();
 			selectButton.SetActive(false);
